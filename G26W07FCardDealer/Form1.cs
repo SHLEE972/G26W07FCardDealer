@@ -10,24 +10,35 @@ namespace G26W07FCardDealer {
         Random random = new Random();
 
         private void OnDeal(object sender, EventArgs e) {
+            PictureBox[] cardBoxes = [Card1, Card2, Card3, Card4, Card5];
+            List<int> drawnCards = new List<int>();
 
+            // 중복X 카드 번호 5개 뽑기
+            while (drawnCards.Count < cardBoxes.Length) {
+                int card = random.Next(suits.Length * values.Length);
 
-            int card = random.Next(suits.Length * values.Length);
-
-            string suit = suits[card / values.Length];
-            string value = values[card % values.Length];
-
-            //if (value == "jack" || value == "queen" || value == "king") { suit += "2";}
-            if (value is "jack" or "queen" or "king") {
-                suit += "2";
+                if (!drawnCards.Contains(card)) {
+                    drawnCards.Add(card);
+                }
             }
 
+            // for문을 사용하여 뽑은 카드를 각각의 Card에 표시
+            for (int i = 0; i < cardBoxes.Length; i++) {
+                int card = drawnCards[i];
 
-            string name = $"{value}_of_{suit}";
+                string suit = suits[card / values.Length];
+                string value = values[card % values.Length];
 
-            Card1.Image = Properties.Resources.ResourceManager
-                .GetObject(name) as Image
-                ?? Properties.Resources.red_joker;
+                if (value is "jack" or "queen" or "king") {
+                    suit += "2";
+                }
+
+                string name = $"{value}_of_{suit}";
+
+                cardBoxes[i].Image = Properties.Resources.ResourceManager
+                    .GetObject(name) as Image
+                    ?? Properties.Resources.red_joker;
+            }
         }
     }
-}
+}   
